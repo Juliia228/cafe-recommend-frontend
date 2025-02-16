@@ -1,4 +1,4 @@
-import logo from './KitchenAssistantLogo.png';
+import logo from './BluesRecommendLogo.png';
 import './App.css';
 
 function App() {
@@ -7,7 +7,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Kitchen Assistant Frontend
+          Cafe Recommend Frontend
         </p>
       </header>
     </div>
