@@ -1,4 +1,8 @@
-# Getting Started with Create React App
+# Проект для диплома НИУ ВШЭ НН 2025
+## Тема диплома: "Разработка системы рекомендаций и программы лояльности для клиентов кафе «Блюз»"
+Проект на React + JS с реализацией frontend части
+
+## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
