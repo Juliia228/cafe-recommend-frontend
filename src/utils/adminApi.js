@@ -2,7 +2,7 @@ import apiClient from './apiClient';
 
 export const login = async ({ login, password }) => {
   try {
-    const response = await apiClient.post('auth/log-in', { login, password });
+    const response = await apiClient.post('auth/log-in/admin', { login, password });
     return response.data;
   } catch (error) {
     throw new Error(

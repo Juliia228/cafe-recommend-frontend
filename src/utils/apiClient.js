@@ -20,7 +20,7 @@ const refreshTokens = async () => {
       throw new Error('No refresh token available');
     }
 
-    const response = await axios.post(`${BASE_URL}/auth/refresh`, {
+    const response = await axios.post(`${BASE_URL}/auth/refresh-token`, {
       refreshToken,
     });
 
@@ -38,7 +38,7 @@ const refreshTokens = async () => {
   } catch (error) {
     // Если не удалось обновить токены, разлогиниваем пользователя
     store.dispatch(logout());
-    window.location.href = '/login';
+    window.location.href = '/';
     return null;
   }
 };
@@ -72,7 +72,7 @@ apiClient.interceptors.response.use(
     if (error.response?.status === 401 && originalRequest._retry) {
       // Перенаправляем на страницу входа, если refresh не помог
       store.dispatch(logout());
-      window.location.href = '/login';
+      window.location.href = '/';
     }
 
     return Promise.reject(error);

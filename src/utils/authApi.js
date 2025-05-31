@@ -11,7 +11,7 @@ export const register = async (userData) => {
 
 export const login = async ({ login, password }) => {
   try {
-    const response = await apiClient.post('user/log-in', { login, password });
+    const response = await apiClient.post('auth/log-in', { login, password });
     return response.data;
   } catch (error) {
     throw new Error(error.response?.data?.message || 'Ошибка при входе');
@@ -20,7 +20,7 @@ export const login = async ({ login, password }) => {
 
 export const forgotPassword = async ({ phone, code, newPassword }) => {
   try {
-    const response = await apiClient.post('/forgot-password', {
+    const response = await apiClient.post('auth/reset-password', {
       phone,
       code,
       newPassword,
@@ -35,7 +35,7 @@ export const forgotPassword = async ({ phone, code, newPassword }) => {
 
 export const getProfile = async () => {
   try {
-    const response = await apiClient.get('/me');
+    const response = await apiClient.get('user');
     return response.data;
   } catch (error) {
     throw new Error(
@@ -46,7 +46,7 @@ export const getProfile = async () => {
 
 export const updateProfile = async (userData) => {
   try {
-    const response = await apiClient.put('/me', userData);
+    const response = await apiClient.put('user/edit', userData);
     return response.data;
   } catch (error) {
     throw new Error(

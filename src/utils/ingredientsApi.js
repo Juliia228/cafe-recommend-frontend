@@ -3,7 +3,7 @@ import apiClient from './apiClient';
 // Получение списка ингредиентов
 export const getIngredients = async () => {
   try {
-    const response = await apiClient.get('/ingredients');
+    const response = await apiClient.get('/ingredient/get-all');
     return response.data;
   } catch (error) {
     throw new Error(
@@ -15,7 +15,7 @@ export const getIngredients = async () => {
 // Создание нового ингредиента
 export const createIngredient = async (label) => {
   try {
-    const response = await apiClient.post('/ingredients', { label });
+    const response = await apiClient.post('/ingredient/new', { label });
     return response.data;
   } catch (error) {
     throw new Error(
@@ -27,7 +27,8 @@ export const createIngredient = async (label) => {
 // Обновление ингредиента
 export const updateIngredient = async (id, newLabel) => {
   try {
-    const response = await apiClient.put(`/ingredients/${id}`, {
+    const response = await apiClient.put(`/ingredient/edit`, {
+      id,
       label: newLabel,
     });
     return response.data;
@@ -41,7 +42,7 @@ export const updateIngredient = async (id, newLabel) => {
 // Удаление ингредиента
 export const deleteIngredient = async (id) => {
   try {
-    const response = await apiClient.delete(`/ingredients/${id}`);
+    const response = await apiClient.delete(`/ingredient/delete/${id}`);
     return response.data;
   } catch (error) {
     throw new Error(

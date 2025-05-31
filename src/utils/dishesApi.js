@@ -24,7 +24,7 @@ export const getCategories = async () => {
 
 export const createDish = async (dishData) => {
   try {
-    const response = await apiClient.post('/dishes', dishData);
+    const response = await apiClient.post('/dish/new', dishData);
     return response.data;
   } catch (error) {
     throw new Error(
@@ -35,7 +35,7 @@ export const createDish = async (dishData) => {
 
 export const updateDish = async (id, dishData) => {
   try {
-    const response = await apiClient.put(`/dishes/${id}`, dishData);
+    const response = await apiClient.put(`/dish/edit`, dishData);
     return response.data;
   } catch (error) {
     throw new Error(
@@ -46,7 +46,7 @@ export const updateDish = async (id, dishData) => {
 
 export const deleteDish = async (id) => {
   try {
-    const response = await apiClient.delete(`/dishes/${id}`);
+    const response = await apiClient.delete(`/dish/delete${id}`);
     return response.data;
   } catch (error) {
     throw new Error(
