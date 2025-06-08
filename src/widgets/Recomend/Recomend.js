@@ -103,7 +103,7 @@ export default function Recomend() {
         // Параллельная загрузка блюд
         const [dishesData] = await Promise.all([getRecomendations()]);
 
-        setRecomend(dishesData);
+        setRecomend(dishesData?.recommendations);
       } catch (err) {
         setError(err.message);
         console.error('Ошибка загрузки:', err);
@@ -148,8 +148,8 @@ export default function Recomend() {
         <Collapse isOpen={openCategory}>
           <div className="d-flex flex-wrap p-3">
             {recomend.map((c) => {
-              const { id, title, price, inrgediens } = c;
-              const inrgedien = inrgediens.map((el) => el.label).join(', ');
+              const { id, name, price, ingredients } = c;
+              const inrgedien = ingredients?.map((el) => el.name).join(', ');
 
               return (
                 <Card
@@ -169,7 +169,7 @@ export default function Recomend() {
                       className="text"
                       style={{ color: '#5d1700' }}
                     >
-                      {title}
+                      {name}
                     </CardTitle>
                     <CardText style={{ color: '#5d1700' }}>
                       {inrgedien}

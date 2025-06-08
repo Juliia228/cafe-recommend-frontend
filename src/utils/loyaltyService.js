@@ -15,7 +15,7 @@ export const loyaltyApi = {
 
   async updateSettings(settings) {
     try {
-      const response = await apiClient.put('/loyalty-program/settings/update', settings);
+      const response = await apiClient.post('/loyalty-program/settings/update', settings);
       return response.data;
     } catch (error) {
       throw new Error(

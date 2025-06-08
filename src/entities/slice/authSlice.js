@@ -29,10 +29,11 @@ const authSlice = createSlice({
       state.isLoading = payload;
     },
     setAuthSuccess: (state, { payload }) => {
+
       state.user = payload.user;
       state.tokens = {
-        accessToken: payload?.accessToken,
-        refreshToken: payload?.refreshToken,
+        accessToken: payload?.token?.accessToken,
+        refreshToken: payload?.token?.refreshToken,
       };
       state.isAdmin = payload.isAdmin || false;
       state.error = null;

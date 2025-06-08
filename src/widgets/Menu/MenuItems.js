@@ -31,78 +31,6 @@ import {
 } from '../../utils/dishesApi';
 import Recomend from '../Recomend/Recomend';
 
-const menu = [
-  {
-    id: 1,
-    title: 'Мозайка заливная',
-    price: 250,
-    category: 'Салаты и Холодные закуски',
-    img: '',
-    desc: 'ветчина, курица, мясо 35/50/5',
-    inrgediens: [
-      {
-        label: 'ветчина',
-        size: 35,
-      },
-      {
-        label: 'курица',
-        size: 50,
-      },
-      {
-        label: 'мясо',
-        size: 5,
-      },
-    ],
-  },
-  {
-    id: 2,
-    title: "Салат 'Новый'",
-    price: 240,
-    category: 'Салаты и Холодные закуски',
-    img: '',
-    desc: 'язык, ветчина, колбаса п/к, огурец св,маслины 125/10',
-    inrgediens: [
-      {
-        label: 'язык',
-        size: 125,
-      },
-      {
-        label: 'ветчина',
-        size: 20,
-      },
-      {
-        label: 'колбаса п/к',
-        size: 50,
-      },
-      {
-        label: 'огурец',
-        size: 15,
-      },
-      {
-        label: 'маслины',
-        size: 10,
-      },
-    ],
-  },
-  {
-    id: 3,
-    title: 'Бульон с фрикадельками',
-    price: 140,
-    category: 'Первые блюда',
-    img: '',
-    desc: 'фрикадельками, овощи',
-    inrgediens: [
-      {
-        label: 'фрикадельками',
-        size: 125,
-      },
-      {
-        label: 'овощи',
-        size: 20,
-      },
-    ],
-  },
-];
 
 export default function MenuItems() {
   const { isAdmin } = useSelector((state) => state.auth);
@@ -112,7 +40,7 @@ export default function MenuItems() {
   const [editedItem, setEditedItem] = useState(null);
   const [openCategories, setOpenCategories] = useState({});
 
-  const [dishes, setDishes] = useState(menu);
+  const [dishes, setDishes] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -127,12 +55,10 @@ export default function MenuItems() {
           getDishes(),
           getCategories(),
         ]);
-console.log('dishesData',dishesData)
         setDishes(dishesData.dishes);
         setCategories(categoriesData.categories);
       } catch (err) {
         setError(err.message);
-        console.error('Ошибка загрузки:', err);
       } finally {
         setLoading(false);
       }
@@ -159,8 +85,6 @@ console.log('dishesData',dishesData)
 
     return acc;
   }, {});
-
-  console.log('groupedItems',groupedItems)
 
   const handleEditClick = (item) => {
     setCurrentItem(item);
@@ -248,9 +172,9 @@ console.log('dishesData',dishesData)
               <Collapse isOpen={!openCategories[category]}>
                 <div className="d-flex flex-wrap p-3">
                   {categoryItems.map((c) => {
-                    const { id, title, price, inrgediens, img, desc } = c;
-                    const inrgedien = inrgediens
-                      .map((el) => el.label)
+                    const { id, name, price, ingredients, img, desc } = c;
+                    const inrgedien = ingredients
+                      ?.map((el) => el.name)
                       .join(', ');
 
                     return (
@@ -312,7 +236,7 @@ console.log('dishesData',dishesData)
                           {img && (
                             <img
                               src={img}
-                              alt={title}
+                              alt={name}
                               style={{
                                 width: '100%',
                                 height: '150px',
@@ -327,7 +251,7 @@ console.log('dishesData',dishesData)
                             className="text"
                             style={{ color: '#5d1700' }}
                           >
-                            {title}
+                            {name}
                           </CardTitle>
                           <CardText style={{ color: '#5d1700' }}>
                             {inrgedien}

@@ -57,7 +57,7 @@ apiClient.interceptors.response.use(
     const originalRequest = error.config;
 
     // Если ошибка 401 и это не запрос на обновление токенов
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (error.response?.status === 401 && !originalRequest._retry || error.code === 'ERR_NETWORK') {
       originalRequest._retry = true;
 
       const newAccessToken = await refreshTokens();

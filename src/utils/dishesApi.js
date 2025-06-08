@@ -1,8 +1,15 @@
 import apiClient from './apiClient';
+import { store } from '../entities/store/store';
+
 
 export const getDishes = async () => {
   try {
-    const response = await apiClient.get('/dish/get-all');
+    const response = await apiClient.get('/dish/get-all', {
+      params: {
+        withIngredients: true,
+        onlyEnabled: true
+      }
+    });
     return response.data;
   } catch (error) {
     throw new Error(

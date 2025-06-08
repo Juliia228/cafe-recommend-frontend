@@ -28,7 +28,6 @@ const AdminAuthModal = ({ isOpen, toggle }) => {
 
     try {
       const result = await login({login: phone, password});
-
       dispatch(
         setAuthSuccess({
           user: result.user,
@@ -36,7 +35,7 @@ const AdminAuthModal = ({ isOpen, toggle }) => {
             accessToken: result.accessToken,
             refreshToken: result.refreshToken,
           },
-          isAdmin: result.user?.role?.find((el)=>el === 'ADMIN'),
+          isAdmin: result.user?.roles?.find((el)=>el === 'ADMIN'),
         })
       );
       toggle();

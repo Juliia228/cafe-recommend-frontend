@@ -57,10 +57,7 @@ const IngredientsAdminPage = () => {
     try {
       const ingredients = await getIngredients();
       setIngredients(
-        ingredients || [
-          { id: 1, label: '1 ингридиент' },
-          { id: 2, label: '2 ингридиент' },
-        ]
+        ingredients.ingredients
       );
     } catch (err) {
       setError(
@@ -78,7 +75,7 @@ const IngredientsAdminPage = () => {
       setError(null);
       const response = await createIngredient(newIngredientLabel.trim());
 
-      setIngredients(response.data);
+      setIngredients(response?.ingredients || []);
       setNewIngredientLabel('');
     } catch (err) {
       setError(err.response?.data?.message || 'Не удалось добавить ингредиент');
@@ -87,7 +84,7 @@ const IngredientsAdminPage = () => {
 
   const startEditing = (ingredient) => {
     setEditingIngredient(ingredient);
-    setEditLabel(ingredient.label);
+    setEditLabel(ingredient.name);
   };
 
   const handleUpdateIngredient = async () => {
@@ -100,7 +97,7 @@ const IngredientsAdminPage = () => {
         editLabel.trim()
       );
 
-      setIngredients(response.data);
+      setIngredients(response.data?.ingredients);
       setEditingIngredient(null);
       setEditLabel('');
     } catch (err) {
@@ -211,7 +208,7 @@ const IngredientsAdminPage = () => {
                       onChange={(e) => setEditLabel(e.target.value)}
                     />
                   ) : (
-                    item.label
+                    item.name
                   )}
                 </td>
                 <td>

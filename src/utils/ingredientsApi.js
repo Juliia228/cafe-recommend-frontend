@@ -13,9 +13,9 @@ export const getIngredients = async () => {
 };
 
 // Создание нового ингредиента
-export const createIngredient = async (label) => {
+export const createIngredient = async (name) => {
   try {
-    const response = await apiClient.post('/ingredient/new', { label });
+    const response = await apiClient.post('/ingredient/new', { name });
     return response.data;
   } catch (error) {
     throw new Error(

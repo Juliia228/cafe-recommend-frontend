@@ -11,8 +11,10 @@ import {
   FormGroup,
   Label,
   Input,
+  FormText,
 } from 'reactstrap';
-import { getCategories, updateDish } from '../../utils/dishesApi';
+import { getCategories, createDish } from '../../utils/dishesApi';
+import { getIngredients } from '../../utils/ingredientsApi';
 
 const seasons = [
   { _id: 'default', name: 'Любой' },
@@ -25,14 +27,16 @@ const seasons = [
 export default function MenuItemCreate() {
   const [editModal, setEditModal] = useState(false);
   const [editedItem, setEditedItem] = useState({
-    title: '',
+    name: '',
     price: '',
     category: '',
     ingredients: [],
     desc: '',
     season: 'default',
+    enabled: true
   });
 
+  const [ingredients, setIngredients] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -41,10 +45,9 @@ export default function MenuItemCreate() {
     const fetchData = async () => {
       try {
         setLoading(true);
-
-        // Параллельная загрузка блюд и категорий
-        const [categoriesData] = await Promise.all([getCategories()]);
+        const [categoriesData, ingredients] = await Promise.all([getCategories(), getIngredients()]);
         setCategories(categoriesData.categories);
+        setIngredients(ingredients.ingredients);
       } catch (err) {
         setError(err.message);
         console.error('Ошибка загрузки:', err);
@@ -58,14 +61,14 @@ export default function MenuItemCreate() {
 
   const toggleEditModal = () => {
     setEditModal(!editModal);
-    // Сброс формы при закрытии
     if (editModal) {
       setEditedItem({
-        title: '',
+        name: '',
         price: '',
         category: '',
         ingredients: [],
         desc: '',
+        season: 'default',
       });
     }
   };
@@ -74,32 +77,45 @@ export default function MenuItemCreate() {
     const { name, value } = e.target;
     setEditedItem({
       ...editedItem,
-      [name]:
-        name === 'ingredients'
-          ? value.split(',').map((item) => ({ label: item.trim() }))
-          : value,
+      [name]: value,
+    });
+  };
+
+  const handleIngredientChange = (ingredientId, isChecked) => {
+    setEditedItem(prev => {
+      if (isChecked) {
+        // Добавляем ингредиент, если его еще нет в списке
+        const ingredientToAdd = ingredients.find(ing => ing.id === ingredientId);
+        if (!prev.ingredients.some(ing => ing.id === ingredientId) && ingredientToAdd) {
+          return {
+            ...prev,
+            ingredients: [...prev.ingredients, { id: ingredientId, name: ingredientToAdd.name }]
+          };
+        }
+      } else {
+        // Удаляем ингредиент, если он есть в списке
+        return {
+          ...prev,
+          ingredients: prev.ingredients.filter(ing => ing.id !== ingredientId)
+        };
+      }
+      return prev;
     });
   };
 
   const handleSaveChanges = async () => {
-    // Здесь должна быть логика сохранения нового блюда
-    // Например: dispatch(createMenuItem(editedItem));
-    console.log('New dish data:', editedItem);
-
     try {
-      const result = await updateDish(editedItem);
+      const result = await createDish(editedItem);
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
-    // После успешного сохранения можно закрыть модальное окно
     toggleEditModal();
   };
 
   return (
     <>
-      {/* Кнопка для создания нового блюда */}
       <Button color="primary" onClick={toggleEditModal} className="col">
         <FaPlus className="mr-2" /> Добавить новое блюдо
       </Button>
@@ -111,12 +127,12 @@ export default function MenuItemCreate() {
         <ModalBody>
           <Form>
             <FormGroup>
-              <Label for="title">Название*</Label>
+              <Label for="name">Название*</Label>
               <Input
                 type="text"
-                name="title"
-                id="title"
-                value={editedItem.title}
+                name="name"
+                id="name"
+                value={editedItem.name}
                 onChange={handleInputChange}
                 required
               />
@@ -170,15 +186,22 @@ export default function MenuItemCreate() {
               </Input>
             </FormGroup>
             <FormGroup>
-              <Label for="ingredients">Ингредиенты (через запятую)*</Label>
-              <Input
-                type="text"
-                name="ingredients"
-                id="ingredients"
-                value={editedItem.ingredients.map((el) => el.label).join(', ')}
-                onChange={handleInputChange}
-                required
-              />
+              <Label>Ингредиенты*</Label>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                {ingredients?.map((ingredient) => (
+                  <FormGroup check key={ingredient.id} style={{ minWidth: '120px' }}>
+                    <Label check>
+                      <Input
+                        type="checkbox"
+                        checked={editedItem.ingredients.some(ing => ing.id === ingredient.id)}
+                        onChange={(e) => handleIngredientChange(ingredient.id, e.target.checked)}
+                      />{' '}
+                      {ingredient.name}
+                    </Label>
+                  </FormGroup>
+                ))}
+              </div>
+              <FormText>Выберите один или несколько ингредиентов</FormText>
             </FormGroup>
             <FormGroup>
               <Label for="desc">Описание</Label>
@@ -199,7 +222,7 @@ export default function MenuItemCreate() {
             onClick={handleSaveChanges}
             disabled={
               loading ||
-              !editedItem.title ||
+              !editedItem.name ||
               !editedItem.price ||
               !editedItem.category ||
               !editedItem.ingredients.length

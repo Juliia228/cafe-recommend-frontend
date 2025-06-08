@@ -25,9 +25,9 @@ const LoyaltySystemPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [settings, setSettings] = useState({
-    initialDiscount: 5,
+    baseDiscount: 5,
     maxDiscount: 20,
-    discountMultiplier: 2,
+    discountIncrement: 2,
     ordersThreshold: 3,
   });
 
@@ -53,7 +53,7 @@ const LoyaltySystemPage = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      await loyaltyApi.updateSettings(settings);
+     const res = await loyaltyApi.updateSettings(settings);
     } catch (err) {
       setError(err.message || 'Ошибка сохранения настроек');
     } finally {
@@ -97,8 +97,8 @@ const LoyaltySystemPage = () => {
             <Label>Начальная скидка (%)</Label>
             <Input
               type="number"
-              name="initialDiscount"
-              value={settings.initialDiscount}
+              name="baseDiscount"
+              value={settings.baseDiscount}
               onChange={handleChange}
               min="0"
               max="100"
@@ -121,8 +121,8 @@ const LoyaltySystemPage = () => {
             <Label>Множитель скидки</Label>
             <Input
               type="number"
-              name="discountMultiplier"
-              value={settings.discountMultiplier}
+              name="discountIncrement"
+              value={settings.discountIncrement}
               onChange={handleChange}
               min="0"
               step="0.1"

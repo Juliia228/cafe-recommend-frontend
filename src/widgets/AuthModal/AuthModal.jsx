@@ -59,10 +59,6 @@ const AuthModal = ({ isOpen, toggle }) => {
         setError('Пароль должен содержать минимум 6 символов');
         return false;
       }
-      if (!consentChecked) {
-        setError('Необходимо согласие на обработку данных');
-        return false;
-      }
     } else if (activeTab === 'register') {
       if (!formData.phone || !/^\+?[0-9]{10,15}$/.test(formData.phone)) {
         setError('Введите корректный номер телефона');
@@ -82,6 +78,10 @@ const AuthModal = ({ isOpen, toggle }) => {
       }
       if (!formData.password || formData.password.length < 6) {
         setError('Пароль должен содержать минимум 6 символов');
+        return false;
+      }
+      if (!consentChecked) {
+        setError('Необходимо согласие на обработку данных');
         return false;
       }
     } else if (activeTab === 'forgot') {
@@ -134,15 +134,10 @@ const AuthModal = ({ isOpen, toggle }) => {
 
       dispatch(
         setAuthSuccess({
-          user: {
-            phone: '123456789',
-            firstName: 'firstName',
-            lastName: 'lastName',
-            sale: '15%',
-          },
+          user: response.user,
           token: {
-            accessToken: 'accessToken',
-            refreshToken: 'refreshToken',
+            accessToken: response.accessToken,
+            refreshToken: response.refreshToken,
           },
         })
       );
@@ -236,36 +231,6 @@ const AuthModal = ({ isOpen, toggle }) => {
                   Забыли пароль?
                 </Button>
               </div>
-
-              <FormGroup check>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <Input
-                    type="checkbox"
-                    id="consentCheckbox"
-                    checked={consentChecked}
-                    onChange={handleConsentChange}
-                    style={{ marginRight: '16px' }}
-                  />
-                  <Label for="consentCheckbox" check>
-                    Я согласен на обработку персональных данных
-                  </Label>
-                </div>
-                <div>
-                  {' '}
-                  {/* 32px = ширина чекбокса + его отступ */}
-                  <small className="text-muted">
-                    Нажимая кнопку "Войти", вы даёте согласие на обработку ваших
-                    персональных данных в соответствии с нашей{' '}
-                    <a
-                      href="/privacy-policy"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Политикой конфиденциальности
-                    </a>
-                  </small>
-                </div>
-              </FormGroup>
             </>
           )}
 
@@ -325,6 +290,36 @@ const AuthModal = ({ isOpen, toggle }) => {
                   onChange={handleChange}
                   placeholder="Пароль"
                 />
+              </FormGroup>
+
+                            <FormGroup check>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <Input
+                    type="checkbox"
+                    id="consentCheckbox"
+                    checked={consentChecked}
+                    onChange={handleConsentChange}
+                    style={{ marginRight: '16px' }}
+                  />
+                  <Label for="consentCheckbox" check>
+                    Я согласен на обработку персональных данных
+                  </Label>
+                </div>
+                <div>
+                  {' '}
+                  {/* 32px = ширина чекбокса + его отступ */}
+                  <small className="text-muted">
+                    Нажимая кнопку "Войти", вы даёте согласие на обработку ваших
+                    персональных данных в соответствии с нашей{' '}
+                    <a
+                      href="/privacy-policy"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Политикой конфиденциальности
+                    </a>
+                  </small>
+                </div>
               </FormGroup>
             </>
           )}
